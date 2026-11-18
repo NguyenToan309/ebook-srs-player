@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1120">
+  <title>Giải Mã Nền Tảng Ebook SRS - Hoàng Khánh</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --panel: #151f32;
+      --panel-light: #1e293b;
+      --border: #2d3b52;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh; padding: 32px 18px;
+      background: radial-gradient(ellipse at top, #1e293b 0%, transparent 55%), var(--bg);
+      color: var(--text);
+      font-family: Inter, Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .container { width: 100%; max-width: 1200px; margin: auto; }
+    .header {
+      margin-bottom: 24px; display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 13px; }
+    .logo {
+      width: 46px; height: 46px; display: grid; place-items: center;
+      border-radius: 13px; background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      font-size: 23px; font-weight: 800;
+    }
+    h1 { font-size: 20px; font-weight: 700; letter-spacing: -.4px; }
+    .subtitle { margin-top: 5px; color: var(--muted); font-size: 13px; }
+    .player-card {
+      padding: 18px; background: rgba(21, 31, 50, .95);
+      border: 1px solid var(--border); border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .3);
+    }
+    .video-info {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px; margin-bottom: 15px;
+    }
+    .video-title { font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+    .status {
+      color: #a5b4fc; font-size: 12px; padding: 5px 10px;
+      border-radius: 20px; background: rgba(99, 102, 241, .15);
+    }
+    .video-container {
+      position: relative; width: 100%; aspect-ratio: 16 / 9;
+      background: #000; border-radius: 12px; overflow: hidden;
+    }
+    video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+    .toolbar {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px; margin-top: 17px;
+    }
+    .toolbar-group { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .btn {
+      display: inline-flex; justify-content: center; align-items: center; gap: 7px;
+      padding: 9px 13px; background: var(--panel-light); color: var(--text);
+      border: 1px solid var(--border); border-radius: 8px; font-size: 13px;
+      cursor: pointer; transition: .2s;
+    }
+    .btn:hover { background: #334155; border-color: #64748b; }
+    .btn.primary { background: var(--primary); border-color: var(--primary); }
+    .btn.primary:hover { background: var(--primary-hover); }
+    .btn.active { background: rgba(99, 102, 241, .2); border-color: var(--primary); color: #c7d2fe; }
+    .speed-label { color: var(--muted); font-size: 12px; margin-right: 3px; }
+    .playlist-section { margin-top: 24px; }
+    .section-heading {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+    }
+    .section-heading h2 { font-size: 15px; font-weight: 600; }
+    .count { color: var(--muted); font-size: 12px; }
+    .playlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 9px; }
+    .playlist-item {
+      display: flex; align-items: center; gap: 11px; padding: 12px;
+      background: #111b2d; border: 1px solid var(--border);
+      border-radius: 9px; cursor: pointer; transition: .2s; min-width: 0;
+    }
+    .playlist-item:hover { background: #1e293b; }
+    .playlist-item.active { background: rgba(99, 102, 241, .13); border-color: var(--primary); }
+    .file-icon {
+      width: 37px; height: 37px; flex-shrink: 0; display: grid;
+      place-items: center; border-radius: 8px; background: #263449; font-size: 18px;
+    }
+    .file-info { min-width: 0; flex: 1; }
+    .file-name { font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-type { margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 25px; }
+    @media (max-width: 600px) {
+      body { padding: 18px 10px; }
+      .player-card { padding: 11px; border-radius: 13px; }
+      h1 { font-size: 16px; }
+      .toolbar { align-items: flex-start; }
+      .toolbar-group { width: 100%; }
+      .btn { padding: 9px 11px; }
+      .playlist { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="brand">
+      <div class="logo">HK</div>
+      <div>
+        <h1>Giải Mã Nền Tảng Ebook SRS</h1>
+        <p class="subtitle">Hoàng Khánh · HoangKhanh Corp.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="player-card">
+    <div class="video-info">
+      <div class="video-title" id="currentTitle">Giải Mã Nền Tảng Ebook SRS.mp4</div>
+      <span class="status" id="status">Đang tải...</span>
+    </div>
+
+    <div class="video-container">
+      <video id="videoPlayer" controls autoplay preload="metadata" playsinline>
+        <source src="Giải_Mã_Nền_Tảng_Ebook_SRS.mp4" type="video/mp4">
+        Trình duyệt không hỗ trợ HTML5 Video.
+      </video>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="btn" id="muteBtn" type="button">🔊 Tắt âm thanh</button>
+        <button class="btn active" id="loopBtn" type="button">🔁 Vòng lặp vô hạn: Tất cả</button>
+        <button class="btn" id="fullscreenBtn" type="button">⛶ Toàn màn hình</button>
+      </div>
+      <div class="toolbar-group">
+        <span class="speed-label">Tốc độ:</span>
+        <button class="btn speed-btn" data-speed="0.5" type="button">0.5x</button>
+        <button class="btn speed-btn active" data-speed="1" type="button">1x</button>
+        <button class="btn speed-btn" data-speed="1.25" type="button">1.25x</button>
+        <button class="btn speed-btn" data-speed="1.5" type="button">1.5x</button>
+        <button class="btn speed-btn" data-speed="2" type="button">2x</button>
+      </div>
+    </div>
+
+    <section class="playlist-section">
+      <div class="section-heading">
+        <h2>📚 Danh sách video</h2>
+        <span class="count" id="fileCount">4 video</span>
+      </div>
+      <div class="playlist" id="playlist"></div>
+    </section>
+  </main>
+
+  <footer class="footer">© HoangKhanh Corp. · Ebook SRS Learning Platform</footer>
+</div>
+
+<script>
+  const player = document.getElementById('videoPlayer');
+  const playlist = document.getElementById('playlist');
+  const currentTitle = document.getElementById('currentTitle');
+  const status = document.getElementById('status');
+  const fileCount = document.getElementById('fileCount');
+  const muteBtn = document.getElementById('muteBtn');
+  const loopBtn = document.getElementById('loopBtn');
+
+  // 4 video MP4 nằm cùng thư mục với index.html
+  const videos = [
+    {
+      name: 'Giải Mã Nền Tảng Ebook SRS.mp4',
+      url: 'Giải_Mã_Nền_Tảng_Ebook_SRS.mp4'
+    },
+    {
+      name: 'Phân tích SRS v1.mp4',
+      url: 'Phân_tích_SRS_v1.mp4'
+    },
+    {
+      name: 'Kiến trúc Hub Tri thức số.mp4',
+      url: 'Kiến_trúc_Hub_Tri_thức_số.mp4'
+    },
+    {
+      name: 'Ebook Phase 3 - Pháo đài & AI.mp4',
+      url: 'Ebook_Phase_3__Pháo_đài___AI.mp4'
+    }
+  ];
+
+  let currentIndex = 0;
+  let loopMode = 'playlist'; // 'playlist' (lặp vô hạn 4 video) hoặc 'single' (lặp vô hạn 1 video)
+  let currentSpeed = 1;
+  let waitingInteractionToUnmute = false;
+
+  // Mặc định mở âm thanh tối đa
+  player.muted = false;
+  player.volume = 1.0;
+
+  function renderPlaylist() {
+    playlist.innerHTML = '';
+
+    videos.forEach((video, index) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'playlist-item' + (index === currentIndex ? ' active' : '');
+      item.setAttribute('aria-label', 'Phát ' + video.name);
+
+      const icon = document.createElement('div');
+      icon.className = 'file-icon';
+      icon.textContent = '▶';
+
+      const info = document.createElement('div');
+      info.className = 'file-info';
+
+      const name = document.createElement('div');
+      name.className = 'file-name';
+      name.textContent = video.name;
+
+      const type = document.createElement('div');
+      type.className = 'file-type';
+      type.textContent = 'Video bài giảng (' + (index + 1) + '/' + videos.length + ')';
+
+      info.append(name, type);
+      item.append(icon, info);
+      item.addEventListener('click', () => playVideo(index));
+      playlist.appendChild(item);
+    });
+
+    fileCount.textContent = videos.length + ' video';
+  }
+
+  // Tự động phát kèm mở âm thanh; nếu trình duyệt chặn phát có tiếng thì phát tạm tắt tiếng và bật lại ngay khi tương tác
+  function startPlaybackWithSound() {
+    player.muted = false;
+    player.volume = 1.0;
+    player.playbackRate = currentSpeed;
+    updateMuteButton();
+
+    player.play().then(() => {
+      status.textContent = 'Đang phát';
+      updateMuteButton();
+    }).catch(() => {
+      // Dự phòng khi trình duyệt chặn Autoplay có âm thanh
+      player.muted = true;
+      updateMuteButton();
+      player.play().then(() => {
+        status.textContent = 'Đang phát (Chạm bất kỳ để mở tiếng)';
+        enableSoundOnFirstInteraction();
+      }).catch(() => {
+        status.textContent = 'Nhấn Play để phát';
+      });
+    });
+  }
+
+  function enableSoundOnFirstInteraction() {
+    if (waitingInteractionToUnmute) return;
+    waitingInteractionToUnmute = true;
+
+    const unlockAudio = () => {
+      player.muted = false;
+      player.volume = 1.0;
+      updateMuteButton();
+      if (player.paused) {
+        player.play().catch(() => {});
+      } else {
+        status.textContent = 'Đang phát';
+      }
+      waitingInteractionToUnmute = false;
+      ['click', 'touchstart', 'keydown'].forEach(evt =>
+        document.removeEventListener(evt, unlockAudio)
+      );
+    };
+
+    ['click', 'touchstart', 'keydown'].forEach(evt =>
+      document.addEventListener(evt, unlockAudio, { once: true })
+    );
+  }
+
+  function playVideo(index) {
+    if (index < 0 || index >= videos.length) return;
+
+    const video = videos[index];
+    player.pause();
+    player.src = video.url;
+
+    currentIndex = index;
+    currentTitle.textContent = video.name;
+    renderPlaylist();
+
+    player.load();
+    startPlaybackWithSound();
+  }
+
+  document.querySelectorAll('.speed-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      currentSpeed = Number(button.dataset.speed);
+      player.playbackRate = currentSpeed;
+      document.querySelectorAll('.speed-btn').forEach(btn => {
+        btn.classList.toggle('active', btn === button);
+      });
+    });
+  });
+
+  function updateMuteButton() {
+    muteBtn.textContent = player.muted ? '🔇 Bật âm thanh' : '🔊 Tắt âm thanh';
+  }
+
+  muteBtn.addEventListener('click', () => {
+    player.muted = !player.muted;
+    updateMuteButton();
+  });
+
+  player.addEventListener('volumechange', updateMuteButton);
+
+  loopBtn.addEventListener('click', () => {
+    loopMode = loopMode === 'playlist' ? 'single' : 'playlist';
+    player.loop = (loopMode === 'single');
+    loopBtn.textContent = loopMode === 'playlist'
+      ? '🔁 Vòng lặp vô hạn: Tất cả'
+      : '🔂 Vòng lặp vô hạn: 1 video';
+  });
+
+  document.getElementById('fullscreenBtn').addEventListener('click', async () => {
+    const container = player.parentElement;
+    try {
+      if (!document.fullscreenElement) {
+        if (container.requestFullscreen) await container.requestFullscreen();
+        else if (player.webkitEnterFullscreen) player.webkitEnterFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (error) {
+      status.textContent = 'Không thể bật toàn màn hình';
+    }
+  });
+
+  player.addEventListener('playing', () => {
+    status.textContent = player.muted && waitingInteractionToUnmute
+      ? 'Đang phát (Chạm bất kỳ để mở tiếng)'
+      : 'Đang phát';
+  });
+  player.addEventListener('waiting', () => status.textContent = 'Đang tải...');
+  player.addEventListener('pause', () => {
+    if (!player.ended) status.textContent = 'Đã tạm dừng';
+  });
+
+  // Tự chuyển video tiếp theo và lặp vô hạn từ đầu khi hết danh sách
+  player.addEventListener('ended', () => {
+    if (!videos.length) return;
+
+    if (loopMode === 'single') {
+      playVideo(currentIndex);
+    } else if (currentIndex < videos.length - 1) {
+      playVideo(currentIndex + 1);
+    } else {
+      playVideo(0);
+    }
+  });
+
+  player.addEventListener('error', () => {
+    status.textContent = 'Không thể tải video — kiểm tra tên file và đường dẫn';
+  });
+
+  renderPlaylist();
+  startPlaybackWithSound();
+</script>
+</body>
+</html>
